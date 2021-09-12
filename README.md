@@ -8,7 +8,7 @@ Discord bot dedicated to online "dark matter" rpg session
 * Install package ```pyparsing```, ```discord``` and ```python_dotenv``` using ```pip -U```
 * Create a ```.env``` file at the ```launch.py``` folder level containing your discord bot token associated to the key  ```DISCORD_DARK_MATTER_BOT_TOKEN```
 
-## Getting stated
+## Getting Started
 * Start the bot ```python lauch.py```
 * Open discord and do a tchat room
 * Send ```!rool 1D20+2D4```
