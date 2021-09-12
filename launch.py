@@ -4,19 +4,18 @@ from discord.ext import commands
 from pyparsing import Suppress, Group, Word, CaselessLiteral, Literal, alphas, nums
 from dotenv import load_dotenv
 
-dice_exp = Group(Word(nums).setResultsName("number").setParseAction(lambda toks:int(toks[0])) 
+dice = Group(Word(nums).setResultsName("number").setParseAction(lambda toks:int(toks[0])) 
         + Suppress(CaselessLiteral("d"))
         + Word(nums).setResultsName("faces").setParseAction(lambda toks:int(toks[0])))
-arth_exp = Literal("+") | Literal("-")
-roll_exp = dice_exp + ( arth_exp + dice_exp)[...]
+arth = Literal("+") | Literal("-")
+roll_grammar = dice + ( arth + dice)[...]
 
 bot = commands.Bot(command_prefix="!")
 
 @bot.command(name='roll')
-async def rool(ctx, *args):
-    diceCommand = "".join(args)
-    print (diceCommand)
-    query = roll_exp.parseString(diceCommand)
+async def roll_command(ctx, *args):
+    roll_arguments = "".join(args)
+    query = roll_grammar.parseString(roll_arguments)
     total = 0
     mod = 1
     message = ""
@@ -27,9 +26,9 @@ async def rool(ctx, *args):
         elif current == "-":
             mod = -1
         else:      
-            roll = mod * random.randrange(1, current.faces) * current.number
-            total += roll
-            message = f"{'+' if mod > 0 else '-'}{current.number}d{current.faces}({roll}){message}"
+            current_roll = mod * random.randrange(1, current.faces) * current.number
+            total += current_roll
+            message = f"{'+' if mod > 0 else '-'}{current.number}d{current.faces}({current_roll}){message}"
     message = f"roll = {total} : {message}"    
     print(message)
     await ctx.send(message)
