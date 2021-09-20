@@ -19,18 +19,26 @@ async def roll_command(ctx, *args):
     total = 0
     mod = 1
     message = ""
+    query = query[::-1]
     while len(query) > 0 :
         current = query.pop()
         if current == "+":
             mod = 1
         elif current == "-":
             mod = -1
-        else:      
-            current_roll = mod * random.randrange(1, current.faces) * current.number
-            total += current_roll
-            message = f"{'+' if mod > 0 else '-'}{current.number}d{current.faces}({current_roll}){message}"
-    message = f"roll = {total} : {message}"    
-    print(message)
+        else:   
+            rolls = [] 
+            for _ in range(0,current.number): 
+                roll = 1
+                if (current.faces > 1):
+                    roll = random.randrange(1, current.faces)
+                rolls.append(roll)
+            rolls_str = "+".join(f"{roll}" for roll in rolls)
+            total_rolls = sum(rolls)
+            total += total_rolls * mod
+            message = f"{message} {'+' if mod > 0 else '-'}{current.number}d{current.faces}({total_rolls}={rolls_str})"
+    message = f"{total} = {message}"    
+    print(f"Send roll {roll_arguments} command response {message}")
     await ctx.send(message)
 load_dotenv()
 bot.run(os.environ.get("DISCORD_DARK_MATTER_BOT_TOKEN"))
